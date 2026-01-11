@@ -48,7 +48,7 @@ function connectSocket() {
                 sender: alias,
                 name: pendingFile.name,
                 iv: pendingFile.iv,
-                key: pendingFile.fileKey,
+                key: pendingFile.key,
                 url: data.fileUrl
             };
 
@@ -89,9 +89,12 @@ function connectSocket() {
             return;
         }
 
+        if (!data.ciphertext) return;
+
         const decrypted = await decryptText(roomKey, data.ciphertext, data.iv);
         const payload = JSON.parse(decrypted);
         appendMessage(payload.sender, payload.text, false);
+
     };
 }
 
@@ -137,9 +140,10 @@ async function encryptFile(file) {
     return {
         blob: new Blob([encrypted]),
         iv: bytesToBase64(iv),
-        fileKey: encKey,
+        key: encKey,
         name: file.name
     };
+
 }
 
 
