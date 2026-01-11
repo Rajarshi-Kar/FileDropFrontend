@@ -35,6 +35,8 @@ function connectSocket() {
     ws = new WebSocket("wss://rypo8sd6h9.execute-api.us-east-1.amazonaws.com/prod?room=" + roomCode);
 
     ws.onmessage = async e => {
+        const data = JSON.parse(e.data);
+
         if (data.presignUrl && pendingFile) {
             await fetch(data.presignUrl, {
                 method: "PUT",
@@ -57,7 +59,6 @@ function connectSocket() {
             return;
         }
 
-        const data = JSON.parse(e.data);
         if (data.type === "rotate") {
             const decrypted = await decryptText(roomKey, data.ciphertext, data.iv);
             const raw = base64ToBytes(decrypted);
@@ -70,10 +71,6 @@ function connectSocket() {
                 ["encrypt", "decrypt"]
             );
             return;
-        }
-
-        if (data.url) {
-            fetch(data.url, { method: "PUT", body: enc.blob });
         }
 
         if (data.type === "system") {
@@ -98,32 +95,6 @@ function connectSocket() {
     };
 }
 
-function appendMessage(sender, text, mine) {
-    const box = document.getElementById("messages");
-    const wrap = document.createElement("div");
-    wrap.className = mine ? "msg mine" : "msg theirs";
-
-    const name = document.createElement("div");
-    name.className = "alias";
-    name.innerText = sender;
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.innerText = text;
-
-    wrap.appendChild(name);
-    wrap.appendChild(bubble);
-    box.appendChild(wrap);
-    box.scrollTop = box.scrollHeight;
-}
-
-function addSystemMessage(text) {
-    const box = document.getElementById("messages");
-    const div = document.createElement("div");
-    div.className = "text-center text-gray-500 text-xs my-3";
-    div.innerText = "— " + text + " —";
-    box.appendChild(div);
-}
 
 async function sendMessage() {
     if (!ws || ws.readyState !== 1) return;
