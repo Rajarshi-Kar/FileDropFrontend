@@ -146,6 +146,24 @@ async function encryptFile(file) {
 
 }
 
+function appendMessage(sender, text, mine) {
+    const box = document.getElementById("messages");
+    const wrap = document.createElement("div");
+    wrap.className = mine ? "msg mine" : "msg theirs";
+
+    const name = document.createElement("div");
+    name.className = "alias";
+    name.innerText = sender;
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerText = text;
+
+    wrap.appendChild(name);
+    wrap.appendChild(bubble);
+    box.appendChild(wrap);
+    box.scrollTop = box.scrollHeight;
+}
 
 async function sendFile() {
     const file = document.getElementById("fileInput").files[0];
