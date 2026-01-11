@@ -95,7 +95,6 @@ function connectSocket() {
     };
 }
 
-
 async function sendMessage() {
     if (!ws || ws.readyState !== 1) return;
 
