@@ -263,7 +263,7 @@ async function createRoom() {
     const raw = new Uint8Array(await crypto.subtle.exportKey("raw", roomKey));
     const keyB64 = bytesToBase64(raw);
 
-    const link = `${location.origin}/?room=${roomCode}#${keyB64}`;
+    const link = `${location.origin}${location.pathname}?room=${roomCode}#${keyB64}`;
     history.replaceState({}, "", link);
     document.getElementById("shareLink").innerText = link;
     document.getElementById("shareLinkModal").innerText = link;
@@ -319,4 +319,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     autoJoin();
 });
+
 
