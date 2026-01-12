@@ -274,14 +274,23 @@ async function createRoom() {
 async function autoJoin() {
     const params = new URLSearchParams(location.search);
     const hash = location.hash.slice(1);
+
     if (!params.has("room") || !hash) return;
 
+    roomCode = params.get("room");
+
     showChat();
+
     alias = prompt("Enter your alias");
     if (!alias) return;
 
-    roomCode = params.get("room");
-    roomKey = await crypto.subtle.importKey("raw", base64ToBytes(hash), { name: "AES-GCM" }, true, ["encrypt", "decrypt"]);
+    roomKey = await crypto.subtle.importKey(
+        "raw",
+        base64ToBytes(hash),
+        { name: "AES-GCM" },
+        true,
+        ["encrypt", "decrypt"]
+    );
 
     document.getElementById("shareLink").innerText = location.href;
     document.getElementById("shareLinkModal").innerText = location.href;
@@ -310,3 +319,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     autoJoin();
 });
+
