@@ -89,9 +89,9 @@ function connectSocket() {
             return;
         }
 
-        if (!data.ciphertext) return;
-
-        const decrypted = await decryptText(roomKey, data.ciphertext, data.iv);
+        if (data.type !== "message") return;
+        
+        const decrypted = await decryptText(roomKey, data.payload.ciphertext, data.payload.iv);
         const payload = JSON.parse(decrypted);
         appendMessage(payload.sender, payload.text, false);
 
@@ -108,7 +108,10 @@ async function sendMessage() {
     const payload = { sender: alias, text: msg };
     const encrypted = await encryptText(roomKey, JSON.stringify(payload));
 
-    ws.send(JSON.stringify(encrypted));
+    ws.send(JSON.stringify({
+        type: "message",
+        payload: encrypted
+    }));
     messageCount++;
     if (messageCount >= 20){
         rotateKey();
@@ -319,5 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     autoJoin();
 });
+
 
 
