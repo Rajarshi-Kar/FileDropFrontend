@@ -32,7 +32,7 @@ async function decryptText(key, ciphertext, iv) {
 }
 
 function connectSocket() {
-    ws = new WebSocket("wss://rypo8sd6h9.execute-api.us-east-1.amazonaws.com/prod?room=" + roomCode);
+    ws = new WebSocket("wss://gst59j9zj1.execute-api.us-east-1.amazonaws.com/prod?room=" + roomCode);
 
     ws.onmessage = async e => {
         const data = JSON.parse(e.data);
@@ -322,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     autoJoin();
 });
+
 
 
 
